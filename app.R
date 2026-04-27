@@ -3,6 +3,7 @@
 #
 # Tab 1: Interactive Wright-Fisher genetic drift simulator
 # Tab 2: Out of Africa demographic history explorer
+# Tab 3: Estimating the mutation rate
 
 library(shiny)
 library(ggplot2)
@@ -12,8 +13,10 @@ library(shinyjs)
 # Source helper modules
 source("R/wf_simulation.R")
 source("R/ooa_simulation.R")
+source("R/mutation_simulation.R")
 source("R/tab1_module.R")
 source("R/tab2_module.R")
+source("R/tab3_module.R")
 
 # ---------------------------------------------------------------------------
 # UI
@@ -71,6 +74,27 @@ ui <- navbarPage(
       ),
       tab2UI("tab2")
     )
+  ),
+
+  # Tab 3: Estimating Mutation Rate
+  tabPanel(
+    title = "\U1F9EC Mutation Rate",
+    fluidPage(
+      fluidRow(
+        column(
+          width = 12,
+          tags$h4("Estimating the Mutation Rate"),
+          tags$p(
+            "The histogram shows allele frequencies from 1,000 independent populations ",
+            "at mutation-drift steady state. Move the μ slider until the orange ",
+            "theoretical curve matches the histogram shape. ",
+            "When the fit score turns green, you’ve found the answer!",
+            style = "color: #555; font-size: 0.95em;"
+          )
+        )
+      ),
+      tab3UI("tab3")
+    )
   )
 )
 
@@ -81,6 +105,7 @@ ui <- navbarPage(
 server <- function(input, output, session) {
   tab1Server("tab1")
   tab2Server("tab2")
+  tab3Server("tab3")
 }
 
 # ---------------------------------------------------------------------------
