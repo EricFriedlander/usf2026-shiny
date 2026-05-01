@@ -57,24 +57,24 @@ ui <- navbarPage(
     )
   ),
 
-  # Tab 2: Out of Africa Explorer
-  tabPanel(
-    title = "\U1F30D Out of Africa",
-    fluidPage(
-      fluidRow(
-        column(
-          width = 12,
-          tags$h4("Out of Africa: Estimate When Humans Left Africa"),
-          tags$p(
-            "Tune the demographic parameters below to match the simulated Allele Frequency Spectrum ",
-            "to the 'real' data. When your fit score is high, you've found the answer!",
-            style = "color: #555; font-size: 0.95em;"
-          )
-        )
-      ),
-      tab2UI("tab2")
-    )
-  ),
+  # # Tab 2: Out of Africa Explorer
+  # tabPanel(
+  #   title = "U1F
+  #   fluidPage(
+  #     fluidRow(
+  #       column(
+  #         width = 12,
+  #         tags$h4("Out of Africa: Estimate When Humans Left Africa"),
+  #         tags$p(
+  #           "Tune the demographic parameters below to match the simulated Allele Frequency Spectrum ",
+  #           "to the 'real' data. When your fit score is high, you've found the answer!",
+  #           style = "color: #555; font-size: 0.95em;"
+  #         )
+  #       )
+  #     ),
+  #     tab2UI("tab2")
+  #   )
+  # ),
 
   # Tab 3: Estimating Mutation Rate
   tabPanel(

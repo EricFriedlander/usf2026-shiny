@@ -18,7 +18,7 @@ library(ggplot2)
 # ---------------------------------------------------------------------------
 TAB3_N     <- 1e6     # effective population size — sets the scale of θ = 4Nμ
 TAB3_MU    <- 1e-8    # true mutation rate (hidden from students)
-TAB3_NPOPS <- 1000L   # populations sampled for the histogram
+TAB3_NPOPS <- 100000L   # populations sampled for the histogram
 
 # Colours
 COLOR_CURVE <- "#E67E22"
@@ -98,6 +98,13 @@ tab3Server <- function(id) {
       simulate_steady_state(TAB3_N, TAB3_MU, TAB3_NPOPS, seed = 42)
     )
 
+    # Compute y ceiling once so the tallest bar reaches ~90% of the plot height.
+    # Uses seq(0,1,length.out=101) to exactly match the 100-bin boundaries that
+    # ggplot derives from scale_x_continuous(limits=c(0,1)) and bins=100.
+    # y_ceil_static <- max(
+    #   hist(steady_freqs, breaks = seq(0, 1, length.out = 101), plot = FALSE)$density
+    # ) / 0.9
+
     rv <- reactiveValues(show_answer = FALSE)
 
     observeEvent(input$show_answer, {
@@ -121,20 +128,20 @@ tab3Server <- function(id) {
     # -----------------------------------------------------------------------
     # Fit score badge
     # -----------------------------------------------------------------------
-    output$fit_display <- renderUI({
-      score <- mutation_fit_score(steady_freqs, TAB3_N, mu_r())
-      pct   <- round(score * 100)
-      color <- if (score >= 0.90) COLOR_GOOD
-               else if (score >= 0.70) COLOR_OK
-               else COLOR_BAD
-      tags$div(
-        style = paste0(
-          "padding:8px 14px; border-radius:4px; font-weight:bold; ",
-          "background-color:", color, "22; border:2px solid ", color, ";"
-        ),
-        paste0("Fit score: ", pct, "%")
-      )
-    })
+    # output$fit_display <- renderUI({
+    #   score <- mutation_fit_score(steady_freqs, TAB3_N, mu_r())
+    #   pct   <- round(score * 100)
+    #   color <- if (score >= 0.90) COLOR_GOOD
+    #            else if (score >= 0.70) COLOR_OK
+    #            else COLOR_BAD
+    #   tags$div(
+    #     style = paste0(
+    #       "padding:8px 14px; border-radius:4px; font-weight:bold; ",
+    #       "background-color:", color, "22; border:2px solid ", color, ";"
+    #     ),
+    #     paste0("Fit score: ", pct, "%")
+    #   )
+    # })
 
     # -----------------------------------------------------------------------
     # Answer reveal
@@ -165,9 +172,8 @@ tab3Server <- function(id) {
       dens_vals[!is.finite(dens_vals)] <- 0
       density_df <- data.frame(p = p_grid, density = dens_vals)
 
-      freq_df  <- data.frame(freq = steady_freqs)
-      hist_obj <- hist(steady_freqs, breaks = 30, plot = FALSE)
-      y_ceil   <- max(hist_obj$density, na.rm = TRUE) * 1.5
+      freq_df <- data.frame(freq = steady_freqs)
+      # y_ceil  <- y_ceil_static
 
       ggplot() +
         geom_histogram(
@@ -185,7 +191,7 @@ tab3Server <- function(id) {
           color     = COLOR_CURVE,
           linewidth = 1.8
         ) +
-        coord_cartesian(ylim = c(0, y_ceil)) +
+        coord_cartesian(ylim = c(0, 2)) +
         scale_x_continuous(
           limits = c(0, 1),
           labels = function(x) paste0(round(x * 100), "%"),
@@ -193,7 +199,7 @@ tab3Server <- function(id) {
         ) +
         labs(
           y     = "Density",
-          title = sprintf("Steady-state allele frequencies   μ = %.2e", mu)
+          title = "Steady-state allele frequencies"
         ) +
         theme_minimal(base_size = 13) +
         theme(

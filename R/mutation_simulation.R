@@ -27,27 +27,30 @@ simulate_steady_state <- function(N, mu, n_pops, seed = NULL) {
 }
 
 
-#' Cosine-similarity fit score between empirical and theoretical distributions
-#'
-#' @param emp_freqs  Numeric vector of empirical allele frequencies.
-#' @param N          Numeric. Effective population size (used internally).
-#' @param mu         Numeric. Mutation rate to evaluate.
-#' @param n_bins     Integer. Number of histogram bins for comparison.
-#'
-#' @return Numeric score in [0, 1], higher = better fit.
-mutation_fit_score <- function(emp_freqs, N, mu, n_bins = 30) {
-  alpha <- 4 * N * mu
-  if (!is.finite(alpha) || alpha <= 0) return(0)
+# #' Cosine-similarity fit score between empirical and theoretical distributions
+# #'
+# #' @param emp_freqs  Numeric vector of empirical allele frequencies.
+# #' @param N          Numeric. Effective population size (used internally).
+# #' @param mu         Numeric. Mutation rate to evaluate.
+# #' @param n_bins     Integer. Number of histogram bins for comparison.
+# #'
+# #' @return Numeric score in [0, 1], higher = better fit.
+# mutation_fit_score <- function(emp_freqs, N, mu, n_bins = 30) {
+#   alpha <- 4 * N * mu
+#   if (!is.finite(alpha) || alpha <= 0) return(0)
 
-  breaks   <- seq(0, 1, length.out = n_bins + 1)
-  emp_dens <- hist(emp_freqs, breaks = breaks, plot = FALSE)$density
+#   breaks   <- seq(0, 1, length.out = n_bins + 1)
+#   emp_dens <- hist(emp_freqs, breaks = breaks, plot = FALSE)$counts
+#   emp_dens <- emp_dens / sum(emp_dens)
+#   mids      <- (breaks[-length(breaks)] + breaks[-1]) / 2
+#   theo_dens <- dbeta(mids, alpha, alpha)
+#   theo_dens[!is.finite(theo_dens)] <- 0
 
-  mids      <- (breaks[-length(breaks)] + breaks[-1]) / 2
-  theo_dens <- dbeta(mids, alpha, alpha)
-  theo_dens[!is.finite(theo_dens)] <- 0
+#   theo_dense <- theo_dens / sum(theo_dens)
 
-  denom <- sqrt(sum(emp_dens^2)) * sqrt(sum(theo_dens^2))
-  if (!is.finite(denom) || denom == 0) return(0)
-
-  round(max(0, min(1, sum(emp_dens * theo_dens) / denom)), 3)
-}
+#   denom <- sqrt(sum(emp_dens^2)) * sqrt(sum(theo_dens^2))
+#   if (!is.finite(denom) || denom == 0) return(0)
+#   print(emp_dens)
+#   print(theo_dens)
+#   round(max(0, min(1, sum(emp_dens * theo_dens) / denom)), 3)
+# }

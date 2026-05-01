@@ -1,0 +1,10 @@
+name: usf2026-shiny
+title:
+username: efriedlander
+account: efriedlander
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 17261348
+bundleId: 11935813
+url: https://efriedlander.shinyapps.io/usf2026-shiny/
+version: 1
